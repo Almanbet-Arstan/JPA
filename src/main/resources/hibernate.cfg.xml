@@ -12,6 +12,9 @@
         <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <property name="show_sql">true</property>
-        <mapping class="entity.Employee"/>
+        <mapping class="entity.paymentMethod"/>
+        <mapping class="entity.address"/>
+        <mapping class="entity.orders"/>
+        <mapping class="entity.ordersMethod"/>
     </session-factory>
 </hibernate-configuration>
