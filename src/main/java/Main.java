@@ -1,79 +1,51 @@
-import entity.Employee;
+import entity.Homework.Course;
+import entity.Homework.Group;
+import entity.Homework.Mentor;
+import entity.Homework.Student;
 import org.hibernate.Session;
 import util.HibernateUtil;
 
-import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
-        Employee employee = Employee.builder().fullName("Иван Иванов").age(18).build();
-        createEmployee(employee);
-        Employee employee2 = Employee.builder().fullName("Максат Турдуев").age(18).build();
-        createEmployee(employee2);
-        Employee employee3 = Employee.builder().fullName("Амир Аманкулов").age(18).build();
-        createEmployee(employee3);
-        List<Employee> employees = getAll();
-        employees.stream()
-                .filter(x -> x.getFullName()
-                .toUpperCase(Locale.ROOT)
-                .contains("А"))
-                .forEach(x -> System.out.println(x));
-        update(Employee.builder().id(1L).fullName("Улан Ырымбеков").age(25).build());
-        System.out.println(findById(2L));
-        delete(2L);
-        deleteAll();
-    }
-    public static Long createEmployee(Employee employee) {
-        Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
-        hibernateSession.beginTransaction();
-        hibernateSession.save(employee);
-        hibernateSession.getTransaction().commit();
-        hibernateSession.close();
-        System.out.println("Saved: " + employee.getId() + ", " + employee.getFullName() + ", " + employee.getAge());
-        return employee.getId();
+        Course java = saveEntity(Course.builder().name("Java").build());
+        Course cSharp = saveEntity(Course.builder().name("C#").build());
+
+        Mentor mentor1 = saveEntity(Mentor.builder().fullName("Shamil Satarov").build());
+        Mentor mentor2 = saveEntity(Mentor.builder().fullName("Aidin Sabyrov").build());
+        Mentor mentor3 = saveEntity(Mentor.builder().fullName("Alim Bogomolets").build());
+
+        Group jvw21 = saveEntity(Group.builder().name("JV-W21").course(java).mentor(mentor1).build());
+        Group jva21 = saveEntity(Group.builder().name("JV-A21").course(java).mentor(mentor2).build());
+        Group csw20 = saveEntity(Group.builder().name("C#-A20").course(cSharp).mentor(mentor3).build());
+        Group csw21 = saveEntity(Group.builder().name("C#-A21").course(cSharp).mentor(mentor3).build());
+
+        Student student1 = saveEntity(new Student("student1", List.of(jvw21)));
+        Student student2 = saveEntity(new Student("student2", List.of(jvw21)));
+        Student student3 = saveEntity(new Student("student3", List.of(jvw21)));
+        Student student4 = saveEntity(new Student("student4", Arrays.asList(jvw21, csw20)));
+        Student student5 = saveEntity(new Student("student5", Arrays.asList(jvw21, csw20)));
+        Student student6 = saveEntity(new Student("student6", List.of(jva21)));
+        Student student7 = saveEntity(new Student("student7", List.of(jva21)));
+        Student student8 = saveEntity(new Student("student8", List.of(jva21)));
+        Student student9 = saveEntity(new Student("student9", Arrays.asList(jva21, csw21)));
+        Student student10 = saveEntity(new Student("student10", Arrays.asList(jva21, csw21)));
+        Student student11 = saveEntity(new Student("student11", Arrays.asList(csw21, jva21)));
+        Student student12 = saveEntity(new Student("student12", Arrays.asList(csw21, jva21)));
+        Student student13 = saveEntity(new Student("student13", List.of(csw21)));
+        Student student14 = saveEntity(new Student("student14", List.of(csw21)));
+        Student student15 = saveEntity(new Student("student15", List.of(csw21)));
     }
 
-    public static List<Employee> getAll(){
-        Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
-        List<Employee> employees = hibernateSession.createQuery("from Employee", Employee.class).list();
-        hibernateSession.close();
-        System.out.println("Найдено " + employees.size() + " сотрудников");
-        return employees;
-    }
-    public static void update(Employee employee){
-        Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
-        hibernateSession.beginTransaction();
-        Employee newEmployee = hibernateSession.load(Employee.class, employee.getId());
-        newEmployee.setFullName(employee.getFullName());
-        newEmployee.setAge(employee.getAge());
-        hibernateSession.getTransaction().commit();
-        hibernateSession.close();
-        System.out.println("Успешно изменено " + employee);
-    }
-    public static Employee findById(Long id){
-        Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
-        Employee employee = hibernateSession.load(Employee.class, id);
-        hibernateSession.close();
-        return employee;
-    }
-    public static void delete(Long id){
-        Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
-        hibernateSession.beginTransaction();
-        Employee employee = findById(id);
-        hibernateSession.delete(employee);
-        hibernateSession.getTransaction().commit();
-        hibernateSession.close();
-        System.out.println("Успешно удалено " + employee);
-    }
-    public static void deleteAll(){
-        Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
-        hibernateSession.beginTransaction();
-        Query query = hibernateSession.createQuery("DELETE from Employee");
-        query.executeUpdate();
-        hibernateSession.getTransaction().commit();
-        hibernateSession.close();
-        System.out.println("Успешно удалены все записи в " + Employee.class.getName());
+    public static <T> T saveEntity(T entity) {
+        Session session =
+                HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(entity);
+        session.getTransaction().commit();
+        session.close();
+        return entity;
     }
 }
