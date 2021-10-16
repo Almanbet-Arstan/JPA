@@ -31,4 +31,10 @@ public class Employee {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    private Integer salary;
 }

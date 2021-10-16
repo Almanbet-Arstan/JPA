@@ -12,9 +12,9 @@
         <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <property name="show_sql">true</property>
-        <mapping class="entity.Homework.Country"/>
-        <mapping class="entity.Homework.KindOfSport"/>
-        <mapping class="entity.Homework.Team"/>
-        <mapping class="entity.Homework.Championship"/>
+        <mapping class="entity.Country"/>
+        <mapping class="entity.Department"/>
+        <mapping class="entity.Employee"/>
+        <mapping class="entity.EmployeeAddress"/>
     </session-factory>
 </hibernate-configuration>

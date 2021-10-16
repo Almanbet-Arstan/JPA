@@ -1,18 +1,18 @@
-package entity.Homework;
+package entity;
 
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "kind_of_sports")
+@Table(name = "countries")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
-public class KindOfSport {
+public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
